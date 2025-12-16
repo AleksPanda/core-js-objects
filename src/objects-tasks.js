@@ -178,8 +178,44 @@ function makeWord(lettersObject) {
  *    sellTickets([25, 25, 50]) => true
  *    sellTickets([25, 100]) => false (The seller does not have enough money to give change.)
  */
-function sellTickets(/* queue */) {
-  throw new Error('Not implemented');
+function sellTickets(queue) {
+  let cash25 = 0;
+  let cash50 = 0;
+
+  for (let i = 0; i < queue.length; i += 1) {
+    const bill = queue[i];
+
+    switch (bill) {
+      case 25:
+        cash25 += 1;
+        break;
+
+      case 50:
+        if (cash25 > 0) {
+          cash25 -= 1;
+          cash50 += 1;
+        } else {
+          return false;
+        }
+        break;
+
+      case 100:
+        if (cash50 > 0 && cash25 > 0) {
+          cash50 -= 1;
+          cash25 -= 1;
+        } else if (cash25 >= 3) {
+          cash25 -= 3;
+        } else {
+          return false;
+        }
+        break;
+
+      default:
+        return false;
+    }
+  }
+
+  return true;
 }
 
 /**
@@ -195,8 +231,14 @@ function sellTickets(/* queue */) {
  *    console.log(r.height);      // => 20
  *    console.log(r.getArea());   // => 200
  */
-function Rectangle(/* width, height */) {
-  throw new Error('Not implemented');
+function Rectangle(width, height) {
+  return {
+    width,
+    height,
+    getArea() {
+      return width * height;
+    },
+  };
 }
 
 /**
@@ -209,8 +251,8 @@ function Rectangle(/* width, height */) {
  *    [1,2,3]   =>  '[1,2,3]'
  *    { height: 10, width: 20 } => '{"height":10,"width":20}'
  */
-function getJSON(/* obj */) {
-  throw new Error('Not implemented');
+function getJSON(obj) {
+  return JSON.stringify(obj);
 }
 
 /**
@@ -224,8 +266,11 @@ function getJSON(/* obj */) {
  *    const r = fromJSON(Circle.prototype, '{"radius":10}');
  *
  */
-function fromJSON(/* proto, json */) {
-  throw new Error('Not implemented');
+function fromJSON(proto, json) {
+  const obj = JSON.parse(json); // преобразуем строку в объект
+  const result = Object.create(proto); // создали пустой объект, который наследует от proto (пустой объект с прототипом Circle.prototype)
+  Object.assign(result, obj); // "объединяем" (копируем свойства из obj в пустой result с прототипом)
+  return result;
 }
 
 /**
